@@ -78,7 +78,7 @@ class Redis
       if value.nil?
         redis.hdel(namespace, name)
       else
-        metadata.merge({_type: value.class.to_s})
+        metadata.merge!({_type: value.class.to_s})
         redis.hset(namespace, name, {data: value, metadata: metadata}.to_json)
       end
     end
