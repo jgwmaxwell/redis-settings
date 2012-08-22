@@ -74,11 +74,11 @@ class Redis
     #   s = Redis::Settings.new("app")
     #   s.set(:items_per_page, 10)
     #
-    def set(name, value)
+    def set(name, value, metadata={})
       if value.nil?
         redis.hdel(namespace, name)
       else
-        redis.hset(namespace, name, {:data => value}.to_json)
+        redis.hset(namespace, name, {data: value, metadata: metadata}.to_json)
       end
     end
 
@@ -98,6 +98,10 @@ class Redis
     # Return a hash with all settings
     def all
       Hash[redis.hgetall(namespace).collect {|k, v| [k.to_sym, JSON.parse(v)["data"]]}]
+    end
+    
+    def dump
+      Hash[redis.hgetall(namespace).collect {|k, v| [k.to_sym, JSON.parse(v)]}]
     end
 
     alias_method :[]=, :set
