@@ -1,4 +1,5 @@
 require "redis"
+require "ostruct"
 
 begin
   require "yajl/json_gem"
@@ -74,10 +75,10 @@ class Redis
       
       if value
         payload = JSON.parse(value)
-        value = payload["metadata"]
+        value = OpenStruct.new payload["metadata"]
       end
       
-      value || default
+      value
     end
 
     # Define a value for the specified setting.
