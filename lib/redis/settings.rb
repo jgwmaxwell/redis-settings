@@ -69,6 +69,17 @@ class Redis
       value || default
     end
 
+    def get_metadata(name)
+      value = redis.hget(namespace, name)
+      
+      if value
+        payload = JSON.parse(value)
+        value = payload["metadata"]
+      end
+      
+      value || default
+    end
+
     # Define a value for the specified setting.
     #
     #   s = Redis::Settings.new("app")
